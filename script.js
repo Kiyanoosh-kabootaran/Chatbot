@@ -13,11 +13,11 @@ const fetchData = fetch("https://openrouter.ai/api/v1/chat/completions", {
     "messages": [
       {
         "role": "user",
-        "content": "What is the meaning of life?"
+        "content": "what is javascript"
       }
     ]
   })
 });
 
 fetchData.then(response => response.json())
-  .then(data => console.log(data));
+  .then(data => console.log(data.choices[0].message.content));
