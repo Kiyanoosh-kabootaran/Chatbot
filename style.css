@@ -55,6 +55,8 @@ body{
   padding: 0.5rem;
   background: var(--light-primary-color);
   width: fit-content;
+  display: flex;
+  align-items: center;
 }
 
 .question-section{
