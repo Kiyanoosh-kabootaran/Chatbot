@@ -1,5 +1,6 @@
 const API_KEY = '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';
 
+const content = document.getElementById('content');
 const sendButton = document.getElementById('sendButton');
 const chatInput = document.getElementById('chatInput');
 
@@ -13,7 +14,7 @@ chatInput.addEventListener('keypress' , event =>{
 
 function handleSendMessage(){
   const question = chatInput.value.trim();
-  console.log(question);
+  addQuestionSection(question);
 }
 
 const fetchData = fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -35,3 +36,11 @@ const fetchData = fetch("https://openrouter.ai/api/v1/chat/completions", {
 
 //fetchData.then(response => response.json())
  // .then(data => console.log(data.choices[0].message.content));
+ function addQuestionSection(message){
+  //create section element
+  const sectionElement = document.createElement('section');
+  sectionElement.className = 'question-section';
+  sectionElement.textContent = message;
+
+  content.appendChild(sectionElement);
+ }
