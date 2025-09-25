@@ -20,9 +20,11 @@ function handleSendMessage(){
   const question = chatInput.value.trim();
 
   //prevent sending empty message
-  if(!question || isAnswerLoading){
-    return;
-  }
+  if(!question || isAnswerLoading) return;
+    
+  //Disable UI send button
+  sendButton.classList.add('send-button-noneactive');
+  
   addQuestionSection(question);
   chatInput.value = '';
 }
@@ -52,6 +54,8 @@ function getAnswer(question){
       //marck as no longer loading
       isAnswerLoading = false;
       addAnswerSection(resultData);
+    }).then(() =>{
+      sendButton.classList.remove('send-button-noneactive');
     });
     }
 

@@ -96,6 +96,12 @@ body{
   transition: 0.25s ease;
 }
 
+.send-button-noneactive {
+  opacity: 0.1;
+  background: black;
+  pointer-events: none;
+}
+
 .send-button:active{
   transform: scale(0.9);
 }
