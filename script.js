@@ -4,6 +4,9 @@ const content = document.getElementById('content');
 const sendButton = document.getElementById('sendButton');
 const chatInput = document.getElementById('chatInput');
 
+let isAnswerLoading = false;
+let answersectionId = 0;
+
 sendButton.addEventListener('click', ()=> handleSendMessage());
 
 chatInput.addEventListener('keypress' , event =>{
@@ -13,11 +16,19 @@ chatInput.addEventListener('keypress' , event =>{
   })
 
 function handleSendMessage(){
+  //get user input and remove leading/tariling space
   const question = chatInput.value.trim();
+
+  //prevent sending empty message
+  if(!question || isAnswerLoading){
+    return;
+  }
   addQuestionSection(question);
+  chatInput.value = '';
 }
 
-const fetchData = fetch("https://openrouter.ai/api/v1/chat/completions", {
+function getAnswer(question){
+  const fetchData = fetch("https://openrouter.ai/api/v1/chat/completions", {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${API_KEY}`,
@@ -28,15 +39,25 @@ const fetchData = fetch("https://openrouter.ai/api/v1/chat/completions", {
     "messages": [
       {
         "role": "user",
-        "content": "what is javascript"
+        "content": question,
       }
     ]
   })
 });
 
-//fetchData.then(response => response.json())
- // .then(data => console.log(data.choices[0].message.content));
+  fetchData.then(response => response.json())
+    .then(data =>{
+      //Get response message
+      const resultData = data.choices[0].message.content;
+      //marck as no longer loading
+      isAnswerLoading = false;
+      addAnswerSection(resultData);
+    });
+    }
+
+
  function addQuestionSection(message){
+  isAnswerLoading = true;
   //create section element
   const sectionElement = document.createElement('section');
   sectionElement.className = 'question-section';
@@ -48,12 +69,22 @@ const fetchData = fetch("https://openrouter.ai/api/v1/chat/completions", {
  }
 
  function addAnswerSection(message){
-  //create an empty answer section with a loading animation
-  const sectionElement = document.createElement('section');
-  sectionElement.className = 'answer-section';
-  sectionElement.innerHTML = getloadingSvg();
+  if(isAnswerLoading){
+    //increment section ID for tracking
+    answersectionId++;
+    //create an empty answer section with a loading animation
+    const sectionElement = document.createElement('section');
+    sectionElement.className = 'answer-section';
+    sectionElement.innerHTML = getloadingSvg();
+    sectionElement.id = answersectionId;
 
-  content.appendChild(sectionElement);
+    content.appendChild(sectionElement);
+    getAnswer(message);
+  } else{
+    //Fill in the answer once it's received
+    const answerSectionElement = document.getElementById(answersectionId);
+    answerSectionElement.textContent = message;
+  }
  }
 
  function getloadingSvg(){
