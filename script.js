@@ -48,27 +48,28 @@ async function getAnswer(question){
   })
 }
 
-  const fetchData =await fetch(API_URL , requestOptions );
-  const response = await fetchData.json();
-  const resultData = response.choices[0].message.content;
+  try{
+    const fetchData =await fetch(API_URL , requestOptions );
+    if(!fetchData.ok) throw new Error('could not fetch data');
 
-  isAnswerLoading = false;
-  addAnswerSection(resultData);
+    const response = await fetchData.json();
+    const resultData = response.choices[0].message.content;
 
-  scrollBotton();
-  sendButton.classList.remove('send-button-noneactive');
+    isAnswerLoading = false;
+    addAnswerSection(resultData);
 
- /* fetchData.then(response => response.json())
-    .then(data =>{
-      //Get response message
-      const resultData = data.choices[0].message.content;
-      //marck as no longer loading
-      isAnswerLoading = false;
-      addAnswerSection(resultData);
-    }).then(() =>{
-      scrollBotton();
-      sendButton.classList.remove('send-button-noneactive');
-    }); */
+  } 
+  
+  catch(error){
+    console.error(error);
+    displayError(error.message);
+  }
+  
+  finally{
+    scrollBotton();
+    sendButton.classList.remove('send-button-noneactive');
+  }
+
     }
 
 
@@ -106,6 +107,14 @@ async function getAnswer(question){
 
  function getloadingSvg(){
   return '<svg style="height: 25px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle fill="#4F6BFE" stroke="#4F6BFE" stroke-width="15" r="15" cx="40" cy="65"><animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate></circle><circle fill="#4F6BFE" stroke="#4F6BFE" stroke-width="15" r="15" cx="100" cy="65"><animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate></circle><circle fill="#4F6BFE" stroke="#4F6BFE" stroke-width="15" r="15" cx="160" cy="65"><animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate></circle></svg>'
+ }
+
+ function displayError(errorMessage){
+  document.getElementById(answersectionId).style.display = 'none';
+  const sectionElement = document.createElement('section');
+  sectionElement.className = 'error-section';
+  sectionElement.innerHTML = errorMessage;
+  content.appendChild(sectionElement);
  }
 
  function scrollBotton() {

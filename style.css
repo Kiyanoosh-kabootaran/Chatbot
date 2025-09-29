@@ -20,6 +20,7 @@ body{
   --primary-color: #4F6BFE;
   --light-primary-color: #4F6BFE1A;
   --secondary-color: #4F6CFE1A;
+  --error-color: #ff3030;
 }
 
 .container{
@@ -55,6 +56,18 @@ body{
   border-radius: 0.5rem 0.5rem 0.5rem 0;
   padding: 0.5rem;
   background: var(--light-primary-color);
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.error-section {
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  color: white;
+  background: var(--error-color);
   width: fit-content;
   display: flex;
   align-items: center;
