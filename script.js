@@ -3,6 +3,7 @@ const API_KEY = 'sk-or-v1-e36be5203be4859a9afaa24c6f7913d8bb5c1b97694e858fc9c242
 const content = document.getElementById('content');
 const sendButton = document.getElementById('sendButton');
 const chatInput = document.getElementById('chatInput');
+const API_URL = `https://openrouter.ai/api/v1/chat/completions`;
 
 let isAnswerLoading = false;
 let answersectionId = 0;
@@ -29,8 +30,8 @@ function handleSendMessage(){
   chatInput.value = '';
 }
 
-function getAnswer(question){
-  const fetchData = fetch("https://openrouter.ai/api/v1/chat/completions", {
+async function getAnswer(question){
+  const requestOptions = {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${API_KEY}`,
@@ -45,9 +46,19 @@ function getAnswer(question){
       }
     ]
   })
-});
+}
 
-  fetchData.then(response => response.json())
+  const fetchData =await fetch(API_URL , requestOptions );
+  const response = await fetchData.json();
+  const resultData = response.choices[0].message.content;
+
+  isAnswerLoading = false;
+  addAnswerSection(resultData);
+
+  scrollBotton();
+  sendButton.classList.remove('send-button-noneactive');
+
+ /* fetchData.then(response => response.json())
     .then(data =>{
       //Get response message
       const resultData = data.choices[0].message.content;
@@ -57,7 +68,7 @@ function getAnswer(question){
     }).then(() =>{
       scrollBotton();
       sendButton.classList.remove('send-button-noneactive');
-    });
+    }); */
     }
 
 
