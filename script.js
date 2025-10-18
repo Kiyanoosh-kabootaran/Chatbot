@@ -1,4 +1,4 @@
-const API_KEY = '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';
+const API_KEY = 'YOUR_API_KEY-HERE';
 
 const content = document.getElementById('content');
 const sendButton = document.getElementById('sendButton');
